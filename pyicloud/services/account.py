@@ -42,8 +42,8 @@ class AccountService:
         if not self._family:
             req = self.session.get(self._acc_family_details_url, params=self.params)
             response = req.json()
-
-            for member_info in response["familyMembers"]:
+            print(response)
+            for member_info in response.get("familyMembers", []):
                 self._family.append(
                     FamilyMember(
                         member_info,
