@@ -17,6 +17,17 @@ class ContactsService:
 
         self.response = {}
 
+    @property
+    def me(self):
+        """
+        Retrieves the current user.
+        """
+        req = self.session.get(
+            self._contacts_endpoint + "/mecard/",
+            params=self.params,
+        )
+        return req.json().get("contacts", [{}])[0]
+
     def refresh_client(self):
         """
         Refreshes the ContactsService endpoint, ensuring that the
