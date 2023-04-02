@@ -9,6 +9,9 @@ class ContactsService:
     def __init__(self, service_root, session, params):
         self.session = session
         self.params = params
+
+        self._me = None
+
         self._service_root = service_root
         self._contacts_endpoint = "%s/co" % self._service_root
         self._contacts_refresh_url = "%s/startup" % self._contacts_endpoint
@@ -22,11 +25,13 @@ class ContactsService:
         """
         Retrieves the current user.
         """
-        req = self.session.get(
-            self._contacts_endpoint + "/mecard/",
-            params=self.params,
-        )
-        return req.json().get("contacts", [{}])[0]
+        if not self._me:
+            req = self.session.get(
+                self._contacts_endpoint + "/mecard/",
+                params=self.params,
+            )
+            self._me = req.json().get("contacts", [{}])[0]
+        return self._me
 
     def refresh_client(self):
         """
